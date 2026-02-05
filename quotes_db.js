@@ -20,7 +20,6 @@
         "小贴士：永远明确指定 `index` 和 `sourcetype`。这是告诉 Splunk 去哪里找数据的最快方式。",
         "小贴士：如果数据量巨大，考虑使用 Report Acceleration (报表加速) 或 Summary Indexing (摘要索引)。",
         "小贴士：不要在生产环境高峰期跑实时搜索 (Real-time Search)，你的管理员会感谢你的。",
-            // --- 性能优化篇 (Performance) ---
         "性能贴士：`tstats` 是速度之王。只要是 indexed field（如 host, source, sourcetype），用 tstats 提速通常是 100 倍起步。",
         "性能贴士：在子搜索中，尽量使用 `earliest` 和 `latest` 限定时间范围，避免子搜索扫描过多数据拖累主搜索。",
         "性能贴士：不要用 `join`，除非万不得已。90% 的 join 场景都可以用 `stats values() by CommonField` 或 `lookup` 替代。",
@@ -125,7 +124,7 @@
         "误报（False Positive）是检验真理的唯一标准。",
         "黑客正在休息，你也可以休息一下。",
         "你确定这是 APT 攻击？我看像管理员手滑。",
-        "正在分析流量... 全是 404，这波稳了。",
+        "正在分析流量... 全全是 404，这波稳了。",
         "Base64 解码出来了吗？希望不是 'Hello World'。",
         "红队（Red Team）进来了吗？还没？那继续睡。",
         "世界上只有两种公司：被黑过的，和不知道自己被黑过的。",

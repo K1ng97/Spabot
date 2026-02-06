@@ -58,6 +58,11 @@ index=golden-gate-active-directory
 
     \`\`\` ========== Output ========== \`\`\` 
 \`threat_detection_alert_process_v2(pre)\``
+    },
+    {
+        name: 'Generate UUID',
+        value: '{{UUID}}',
+        group: 'Tools'
     }
   ];
 })(window);

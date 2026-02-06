@@ -36,7 +36,9 @@
       try {
         chrome.storage.local.get([key], (result) => {
           if (chrome.runtime.lastError) {
-             console.error('[Spabot] Storage load error:', chrome.runtime.lastError);
+             const msg = chrome.runtime.lastError.message;
+             console.error('[Spabot] Storage load error:', msg);
+             this.checkInvalidated(msg);
              if (callback) callback([]);
              return;
           }
@@ -45,8 +47,35 @@
         });
       } catch (e) {
         console.error('[Spabot] Storage access exception:', e);
+        this.checkInvalidated(e.message);
         if (callback) callback([]);
       }
+    },
+
+    checkInvalidated: function(msg) {
+        if (msg && msg.includes('Extension context invalidated')) {
+            if (document.getElementById('spabot-invalidated-msg')) return;
+            
+            const div = document.createElement('div');
+            div.id = 'spabot-invalidated-msg';
+            Object.assign(div.style, {
+                position: 'fixed', top: '0', left: '0', width: '100%',
+                backgroundColor: '#d9534f', color: '#fff', textAlign: 'center',
+                padding: '12px', zIndex: '2147483647', fontFamily: 'sans-serif',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.2)', fontSize: '14px'
+            });
+            div.innerHTML = '<strong>Spabot Updated</strong>: Please <a href="javascript:location.reload()" style="color:#fff;text-decoration:underline;font-weight:bold;">refresh the page</a> to reconnect.';
+            
+            const close = document.createElement('span');
+            close.innerHTML = '&times;';
+            close.style.cursor = 'pointer';
+            close.style.marginLeft = '15px';
+            close.style.opacity = '0.8';
+            close.onclick = () => div.remove();
+            div.appendChild(close);
+            
+            document.body.appendChild(div);
+        }
     },
 
     // Initialize or Load
@@ -276,12 +305,6 @@
       const actList = document.createElement('ul');
       actList.className = 'spabot-menu-list';
       
-      // Insert UUID
-      const uuidBtn = document.createElement('li');
-      uuidBtn.innerText = 'Insert UUID';
-      uuidBtn.onclick = () => this.handleInsertUUID();
-      actList.appendChild(uuidBtn);
-      
       const createRefLi = (text, onOpen, onAdd) => {
           const li = document.createElement('li');
           li.style.display = 'flex';
@@ -310,8 +333,6 @@
           li.appendChild(addSpan);
           return li;
       };
-
-      actList.appendChild(uuidBtn); // UUID doesn't need +
 
       // Index Reference
       actList.appendChild(createRefLi('Index Reference', 
@@ -956,7 +977,7 @@
       
       this.menuElement.style.display = 'block';
       const top = anchorRect.top + anchorRect.height + 10 + window.scrollY;
-      const left = anchorRect.left - 150 + window.scrollX;
+      const left = anchorRect.left - 180 + window.scrollX;
       this.menuElement.style.top = `${top}px`;
       this.menuElement.style.left = `${left}px`;
       this.showMessage(''); 
